@@ -1,0 +1,9 @@
+rules:
+  unpinned-uses:
+    config:
+      policies:
+        # Validators that must track Home Assistant's and HACS's latest rules.
+        # They run with read-only permissions and no stored credentials.
+        home-assistant/actions/*: any
+        hacs/action: any
+        "*": hash-pin

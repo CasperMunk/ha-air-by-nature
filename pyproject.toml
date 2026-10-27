@@ -1,0 +1,40 @@
+[project]
+name = "ha-air-by-nature"
+version = "0.1.0"
+description = "Home Assistant integration for AIRbyNATURE ventilation units"
+requires-python = ">=3.13"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "I", "B", "UP", "SIM", "RUF",
+    "ASYNC",  # blocking calls in async code
+    "S",      # bandit security checks
+    "BLE",    # blind except
+    "PT",     # pytest style
+    "C4", "PIE", "LOG", "G",
+]
+ignore = ["RUF001", "RUF012"]  # HA uses mutable _attr_* class defaults
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]  # asserts and fake tokens are fine in tests
+
+[tool.mypy]
+python_version = "3.14"
+strict = true
+implicit_reexport = true  # HA platforms re-export their enums without __all__
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+# HA 2026.10 types flow schemas as probatio (a drop-in voluptuous replacement);
+# voluptuous still works and is what HA 2026.8, the minimum, ships.
+module = ["air_by_nature.config_flow", "custom_components.air_by_nature.config_flow"]
+disable_error_code = ["arg-type"]

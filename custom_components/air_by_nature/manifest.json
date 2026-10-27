@@ -1,0 +1,12 @@
+{
+  "domain": "air_by_nature",
+  "name": "Air by Nature",
+  "codeowners": ["@CasperMunk"],
+  "config_flow": true,
+  "documentation": "https://github.com/CasperMunk/ha-air-by-nature",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/CasperMunk/ha-air-by-nature/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}

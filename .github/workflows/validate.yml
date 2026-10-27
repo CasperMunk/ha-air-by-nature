@@ -1,0 +1,73 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 4 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  hassfest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Tracks HA's latest rules on purpose; see .github/zizmor.yml.
+      - uses: home-assistant/actions/hassfest@master
+
+  hacs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: hacs/action@main
+        with:
+          category: integration
+
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: pip install pytest-homeassistant-custom-component ruff mypy zizmor
+      - run: ruff check . && ruff format --check .
+      - run: mypy custom_components/air_by_nature
+      - run: zizmor --offline .github/workflows
+
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Oldest supported HA (hacs.json "homeassistant").
+          - name: HA 2026.8.0
+            harness: pytest-homeassistant-custom-component==0.13.354
+          - name: HA latest
+            harness: pytest-homeassistant-custom-component
+    name: tests (${{ matrix.name }})
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - run: pip install "$HARNESS" pytest-cov
+        env:
+          HARNESS: ${{ matrix.harness }}
+      - run: pytest -q --cov=custom_components.air_by_nature --cov-fail-under=100

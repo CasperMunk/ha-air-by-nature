@@ -1,0 +1,130 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Log in with the email and password you use on admin.airbynature.com.",
+        "data": {
+          "username": "Email",
+          "password": "Password"
+        },
+        "data_description": {
+          "username": "The email you log in to admin.airbynature.com with.",
+          "password": "Used once to get access tokens. It is not stored."
+        }
+      },
+      "group": {
+        "description": "Your account has several homes. Pick the one to add.",
+        "data": {
+          "group_id": "Home"
+        },
+        "data_description": {
+          "group_id": "The home whose ventilation units you want in Home Assistant."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log in again",
+        "description": "Air by Nature no longer accepts the saved login for {username}. Enter the password again.",
+        "data": {
+          "password": "Password"
+        },
+        "data_description": {
+          "password": "Your current admin.airbynature.com password. It is not stored."
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Wrong email or password.",
+      "cannot_connect": "Could not reach Air by Nature.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "This home is already set up.",
+      "no_groups": "No homes found on this account.",
+      "reauth_successful": "Logged in again.",
+      "unknown": "Unexpected error."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "online": {
+        "name": "Online"
+      },
+      "drying_heat_exchanger": {
+        "name": "Drying heat exchanger"
+      }
+    },
+    "fan": {
+      "ventilation": {
+        "name": "Ventilation"
+      }
+    },
+    "select": {
+      "comfort_level": {
+        "name": "Comfort level",
+        "state": {
+          "off": "Off",
+          "very_quiet": "Very quiet",
+          "quiet": "Quiet",
+          "normal": "Normal",
+          "high": "High",
+          "extra_high": "Extra high"
+        }
+      }
+    },
+    "sensor": {
+      "supply_temperature": {
+        "name": "Supply air temperature"
+      },
+      "supply_humidity": {
+        "name": "Supply air humidity"
+      },
+      "extract_temperature": {
+        "name": "Extract air temperature"
+      },
+      "extract_humidity": {
+        "name": "Extract air humidity"
+      },
+      "outdoor_temperature": {
+        "name": "Outdoor temperature"
+      },
+      "co2": {
+        "name": "Carbon dioxide"
+      },
+      "tvoc": {
+        "name": "VOC"
+      },
+      "supply_fan": {
+        "name": "Supply fan"
+      },
+      "extract_fan": {
+        "name": "Extract fan"
+      },
+      "supply_fan_rpm": {
+        "name": "Supply fan speed"
+      },
+      "extract_fan_rpm": {
+        "name": "Extract fan speed"
+      },
+      "wifi_signal": {
+        "name": "Wi-Fi signal"
+      },
+      "last_reading": {
+        "name": "Last reading"
+      },
+      "active_rule": {
+        "name": "Active rule"
+      }
+    }
+  },
+  "exceptions": {
+    "auth_failed": {
+      "message": "Air by Nature rejected the login. Log in again."
+    },
+    "update_failed": {
+      "message": "Could not update from Air by Nature: {error}"
+    },
+    "set_failed": {
+      "message": "Could not change the ventilation level: {error}"
+    }
+  }
+}

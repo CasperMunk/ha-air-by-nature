@@ -1,0 +1,130 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Log ind med den e-mail og adgangskode, du bruger på admin.airbynature.com.",
+        "data": {
+          "username": "E-mail",
+          "password": "Adgangskode"
+        },
+        "data_description": {
+          "username": "Den e-mail, du logger ind på admin.airbynature.com med.",
+          "password": "Bruges én gang til at hente adgangsnøgler. Den gemmes ikke."
+        }
+      },
+      "group": {
+        "description": "Din konto har flere hjem. Vælg det, der skal tilføjes.",
+        "data": {
+          "group_id": "Hjem"
+        },
+        "data_description": {
+          "group_id": "Det hjem, hvis ventilationsenheder skal med i Home Assistant."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log ind igen",
+        "description": "Air by Nature accepterer ikke længere det gemte login for {username}. Indtast adgangskoden igen.",
+        "data": {
+          "password": "Adgangskode"
+        },
+        "data_description": {
+          "password": "Din nuværende adgangskode til admin.airbynature.com. Den gemmes ikke."
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Forkert e-mail eller adgangskode.",
+      "cannot_connect": "Kunne ikke få forbindelse til Air by Nature.",
+      "unknown": "Uventet fejl."
+    },
+    "abort": {
+      "already_configured": "Dette hjem er allerede sat op.",
+      "no_groups": "Ingen hjem fundet på kontoen.",
+      "reauth_successful": "Logget ind igen.",
+      "unknown": "Uventet fejl."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "online": {
+        "name": "Online"
+      },
+      "drying_heat_exchanger": {
+        "name": "Tørrer varmeveksler"
+      }
+    },
+    "fan": {
+      "ventilation": {
+        "name": "Ventilation"
+      }
+    },
+    "select": {
+      "comfort_level": {
+        "name": "Komfortniveau",
+        "state": {
+          "off": "Slukket",
+          "very_quiet": "Meget stille",
+          "quiet": "Stille",
+          "normal": "Normal",
+          "high": "Høj",
+          "extra_high": "Ekstra høj"
+        }
+      }
+    },
+    "sensor": {
+      "supply_temperature": {
+        "name": "Indblæsningstemperatur"
+      },
+      "supply_humidity": {
+        "name": "Indblæsningsfugt"
+      },
+      "extract_temperature": {
+        "name": "Udsugningstemperatur"
+      },
+      "extract_humidity": {
+        "name": "Udsugningsfugt"
+      },
+      "outdoor_temperature": {
+        "name": "Udetemperatur"
+      },
+      "co2": {
+        "name": "CO2"
+      },
+      "tvoc": {
+        "name": "VOC"
+      },
+      "supply_fan": {
+        "name": "Indblæsningsventilator"
+      },
+      "extract_fan": {
+        "name": "Udsugningsventilator"
+      },
+      "supply_fan_rpm": {
+        "name": "Indblæsning omdrejninger"
+      },
+      "extract_fan_rpm": {
+        "name": "Udsugning omdrejninger"
+      },
+      "wifi_signal": {
+        "name": "Wi-Fi-signal"
+      },
+      "last_reading": {
+        "name": "Seneste måling"
+      },
+      "active_rule": {
+        "name": "Aktiv regel"
+      }
+    }
+  },
+  "exceptions": {
+    "auth_failed": {
+      "message": "Air by Nature afviste login. Log ind igen."
+    },
+    "update_failed": {
+      "message": "Kunne ikke hente data fra Air by Nature: {error}"
+    },
+    "set_failed": {
+      "message": "Kunne ikke ændre ventilationsniveauet: {error}"
+    }
+  }
+}

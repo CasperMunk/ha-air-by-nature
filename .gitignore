@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+.ruff_cache/
+handoff-air-by-nature.md
+.DS_Store
+.mypy_cache/
+coverage.xml
