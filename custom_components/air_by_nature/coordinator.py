@@ -22,6 +22,9 @@ class AirByNatureCoordinator(DataUpdateCoordinator[DeviceGroup]):
     """Polls one device group."""
 
     config_entry: AirByNatureConfigEntry
+    # Device registry id of the home, the via device of each unit. Set by
+    # async_setup_entry after the first refresh, before the platforms load.
+    group_device_id: str
 
     def __init__(
         self,
@@ -29,7 +32,6 @@ class AirByNatureCoordinator(DataUpdateCoordinator[DeviceGroup]):
         entry: AirByNatureConfigEntry,
         client: AirByNatureClient,
         group_id: int,
-        group_device_id: str,
     ) -> None:
         """Initialise."""
         super().__init__(
@@ -41,8 +43,6 @@ class AirByNatureCoordinator(DataUpdateCoordinator[DeviceGroup]):
         )
         self.client = client
         self.group_id = group_id
-        # Device registry id of the home, the via device of each unit.
-        self.group_device_id = group_device_id
         # Last non-zero level per unit, so turn_on restores it.
         self.last_on_level: dict[int, int] = {}
 

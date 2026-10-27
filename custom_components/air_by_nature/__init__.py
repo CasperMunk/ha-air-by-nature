@@ -34,14 +34,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: AirByNatureConfigEntry) 
 
     client.add_token_listener(_persist_tokens)
 
-    group_id = int(entry.data[CONF_GROUP_ID])
-    # The home is the parent device of each unit; create it before the units.
-    group_device = dr.async_get(hass).async_get_or_create(
-        config_entry_id=entry.entry_id, **group_device_info(group_id)
-    )
-
-    coordinator = AirByNatureCoordinator(hass, entry, client, group_id, group_device.id)
+    coordinator = AirByNatureCoordinator(hass, entry, client, int(entry.data[CONF_GROUP_ID]))
     await coordinator.async_config_entry_first_refresh()
+
+    # The home is the via device of each unit; create it before the units, once
+    # the first refresh has its name.
+    group_device = dr.async_get(hass).async_get_or_create(
+        config_entry_id=entry.entry_id, **group_device_info(coordinator.data)
+    )
+    coordinator.group_device_id = group_device.id
     entry.runtime_data = coordinator
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)

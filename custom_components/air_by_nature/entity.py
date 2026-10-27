@@ -5,7 +5,7 @@ from __future__ import annotations
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .api import Device
+from .api import Device, DeviceGroup
 from .const import DOMAIN, MANUFACTURER
 from .coordinator import AirByNatureCoordinator
 
@@ -15,14 +15,18 @@ MODEL_NAMES = {
 }
 
 
-def group_device_info(group_id: int) -> DeviceInfo:
-    """Device info of the home, the parent device of its units."""
+def group_device_info(group: DeviceGroup) -> DeviceInfo:
+    """Device info of the home, the parent device of its units.
+
+    Named after the home as the cloud knows it, so it does not read like a
+    duplicate of the integration.
+    """
     return DeviceInfo(
-        identifiers={(DOMAIN, f"group_{group_id}")},
+        identifiers={(DOMAIN, f"group_{group.id}")},
         manufacturer=MANUFACTURER,
-        model="Device group",
-        name="Air by Nature",
-        configuration_url=f"https://admin.airbynature.com/app/{group_id}/overview",
+        model="Home",
+        name=group.name,
+        configuration_url=f"https://admin.airbynature.com/app/{group.id}/overview",
     )
 
 
@@ -72,4 +76,4 @@ class AirByNatureGroupEntity(CoordinatorEntity[AirByNatureCoordinator]):
         """Initialise."""
         super().__init__(coordinator)
         self._attr_unique_id = f"group_{coordinator.group_id}_{key}"
-        self._attr_device_info = group_device_info(coordinator.group_id)
+        self._attr_device_info = group_device_info(coordinator.data)

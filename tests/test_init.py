@@ -43,7 +43,7 @@ async def test_setup_creates_entities(hass: HomeAssistant, setup_integration) ->
     assert hass.states.get(f"sensor.{DOWN}_supply_air_temperature").state == "19.18"
     assert hass.states.get(f"sensor.{UP}_outdoor_temperature").state == "16.46"
     assert hass.states.get(f"binary_sensor.{UP}_online").state == STATE_ON
-    assert hass.states.get("sensor.air_by_nature_active_rule").state == "Luftskifte 1"
+    assert hass.states.get("sensor.test_home_active_rule").state == "Luftskifte 1"
 
     # RPM sensors exist but are disabled by default.
     ent = er.async_get(hass).async_get(f"sensor.{DOWN}_supply_fan_speed")
@@ -56,6 +56,44 @@ async def test_setup_creates_entities(hass: HomeAssistant, setup_integration) ->
     unit = devreg.async_get_device_by_identifier((DOMAIN, "1002"), entry.entry_id)
     assert unit.via_device_id == home.id
     assert unit.model == "Main unit v2"
+    # The home is named after the cloud's home, not the integration.
+    assert home.name == "Test Home"
+    assert home.model == "Home"
+
+
+async def test_home_device_renamed_on_upgrade(
+    hass: HomeAssistant, setup_integration, config_entry
+) -> None:
+    """A home device from 0.1.0 (named "Air by Nature") takes the home's name.
+
+    Entity ids stay as they were, and a name the user set is kept.
+    """
+    config_entry.add_to_hass(hass)
+    devreg = dr.async_get(hass)
+    old = devreg.async_get_or_create(
+        config_entry_id=config_entry.entry_id,
+        identifiers={(DOMAIN, "group_100")},
+        name="Air by Nature",
+        model="Device group",
+    )
+    er.async_get(hass).async_get_or_create(
+        "sensor",
+        DOMAIN,
+        "group_100_active_rule",
+        config_entry=config_entry,
+        device_id=old.id,
+        suggested_object_id="air_by_nature_active_rule",
+    )
+    devreg.async_update_device(old.id, name_by_user="Ventilation schedule")
+
+    await setup_integration()
+    home = devreg.async_get(old.id)
+    assert (home.name, home.model, home.name_by_user) == (
+        "Test Home",
+        "Home",
+        "Ventilation schedule",
+    )
+    assert hass.states.get("sensor.air_by_nature_active_rule").state == "Luftskifte 1"
 
 
 async def test_offline_unit(hass: HomeAssistant, setup_integration, group_json) -> None:
