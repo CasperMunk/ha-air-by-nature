@@ -37,14 +37,17 @@ async def _start(hass: HomeAssistant):
 async def test_single_group(hass: HomeAssistant, aioclient_mock: AiohttpClientMocker) -> None:
     """One home: entry is created straight away, password is not stored."""
     aioclient_mock.post(TOKEN_URL, json=TOKEN_RESPONSE)
-    aioclient_mock.get(GROUPS_URL, json={"data": [{"id": 100, "name": "Home"}]})
+    aioclient_mock.get(
+        GROUPS_URL, json={"data": [{"id": 100, "name": "Jane Doe, Main Street 1, 1234 Town"}]}
+    )
 
     result = await _start(hass)
     result = await hass.config_entries.flow.async_configure(result["flow_id"], CREDS)
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["result"].unique_id == "100"
-    assert result["title"] == "Home"
+    # One home: its cloud name (often an address) stays out of the title.
+    assert result["title"] == "Air by Nature"
     data = result["data"]
     assert data[CONF_GROUP_ID] == 100
     assert data[CONF_USERNAME] == "user@example.com"

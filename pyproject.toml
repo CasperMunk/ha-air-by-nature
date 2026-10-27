@@ -1,6 +1,6 @@
 [project]
 name = "ha-air-by-nature"
-version = "0.1.1"
+version = "0.1.2"
 description = "Home Assistant integration for AIRbyNATURE ventilation units"
 requires-python = ">=3.13"
 

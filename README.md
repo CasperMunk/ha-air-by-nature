@@ -15,7 +15,7 @@ Per ventilation unit:
 | Sensors | Supply and extract air temperature and humidity, outdoor temperature, CO2, VOC, supply and extract fan %. |
 | Diagnostic | Online, drying heat exchanger, Wi-Fi signal, last reading, fan RPM (disabled by default). |
 
-For the home: an **Active rule** sensor showing which schedule rule the cloud is running, with mode and status as attributes.
+For the home, a device called **Ventilation system** (the units hang under it) with an **Active rule** sensor showing which schedule rule the cloud is running, with mode and status as attributes.
 
 Readings and control entities go unavailable while a unit is offline; the Online sensor stays available so you can alert on it.
 

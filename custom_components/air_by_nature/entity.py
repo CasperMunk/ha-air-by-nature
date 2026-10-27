@@ -18,14 +18,15 @@ MODEL_NAMES = {
 def group_device_info(group: DeviceGroup) -> DeviceInfo:
     """Device info of the home, the parent device of its units.
 
-    Named after the home as the cloud knows it, so it does not read like a
-    duplicate of the integration.
+    A fixed name, not the home's name from the cloud: users often name the
+    home after themselves and their street address. Not "Air by Nature"
+    either, which reads like a duplicate of the integration.
     """
     return DeviceInfo(
         identifiers={(DOMAIN, f"group_{group.id}")},
         manufacturer=MANUFACTURER,
         model="Home",
-        name=group.name,
+        name="Ventilation system",
         configuration_url=f"https://admin.airbynature.com/app/{group.id}/overview",
     )
 
