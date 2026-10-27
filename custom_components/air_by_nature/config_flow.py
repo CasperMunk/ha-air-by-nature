@@ -112,8 +112,10 @@ class AirByNatureConfigFlow(ConfigFlow, domain=DOMAIN):
         self._abort_if_unique_id_configured()
         if self._tokens is None:  # pragma: no cover - set by a successful login
             return self.async_abort(reason="unknown")
+        name = next((g.get("name") for g in self._groups if int(g["id"]) == group_id), None)
         return self.async_create_entry(
-            title="Air by Nature",
+            # The home's name, so several homes can be told apart.
+            title=str(name or "Air by Nature"),
             data={
                 CONF_USERNAME: self._username,
                 CONF_GROUP_ID: group_id,

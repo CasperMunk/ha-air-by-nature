@@ -39,7 +39,6 @@ class AirByNatureFan(AirByNatureDeviceEntity, FanEntity):
     """Ventilation unit as a fan. Speed 1-5 maps to comfort level 1-5."""
 
     _attr_name = None  # main feature: entity takes the device name
-    _attr_translation_key = "ventilation"
     _attr_speed_count = MAX_LEVEL
     _attr_supported_features = (
         FanEntityFeature.SET_SPEED | FanEntityFeature.TURN_ON | FanEntityFeature.TURN_OFF

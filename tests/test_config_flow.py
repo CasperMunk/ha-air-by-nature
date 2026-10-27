@@ -44,6 +44,7 @@ async def test_single_group(hass: HomeAssistant, aioclient_mock: AiohttpClientMo
 
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["result"].unique_id == "100"
+    assert result["title"] == "Home"
     data = result["data"]
     assert data[CONF_GROUP_ID] == 100
     assert data[CONF_USERNAME] == "user@example.com"
@@ -73,6 +74,8 @@ async def test_multiple_groups(hass: HomeAssistant, aioclient_mock: AiohttpClien
     )
     assert result["type"] is FlowResultType.CREATE_ENTRY
     assert result["data"][CONF_GROUP_ID] == 700
+    # Titled after the chosen home, so two homes can be told apart.
+    assert result["title"] == "Cabin"
 
 
 @pytest.mark.parametrize(

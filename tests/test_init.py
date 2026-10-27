@@ -107,6 +107,17 @@ async def test_offline_unit(hass: HomeAssistant, setup_integration, group_json) 
     assert hass.states.get(f"fan.{DOWN}").state == STATE_ON
 
 
+async def test_odd_unused_fields_do_not_break_the_poll(
+    hass: HomeAssistant, setup_integration, group_json
+) -> None:
+    """Values in fields the integration does not use cannot fail the whole poll."""
+    group_json["data"].update(target_temperature="", status=None, mode=None)
+    group_json["data"]["devices"][1].update(has_filter="unknown", type=None)
+    entry = await setup_integration()
+    assert entry.state is ConfigEntryState.LOADED
+    assert hass.states.get(f"fan.{DOWN}").attributes["percentage"] == 80
+
+
 async def test_not_ready_on_server_error(
     hass: HomeAssistant, config_entry: MockConfigEntry, aioclient_mock: AiohttpClientMocker
 ) -> None:

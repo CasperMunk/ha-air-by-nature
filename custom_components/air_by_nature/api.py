@@ -118,17 +118,6 @@ class Tokens:
 
 
 @dataclass
-class Reading:
-    """Latest sensor reading of a unit (keys as the API sends them)."""
-
-    values: dict[str, Any]
-
-    def get(self, key: str) -> Any:
-        """Return one value or None."""
-        return self.values.get(key)
-
-
-@dataclass
 class Device:
     """One ventilation unit."""
 
@@ -138,10 +127,9 @@ class Device:
     comfort_level: int
     is_online: bool
     wifi_signal: int | None
-    has_filter: bool
     is_drying_heat_exchanger: bool
-    reading: Reading | None
-    raw: dict[str, Any] = field(repr=False)
+    # Latest sensor reading, keys as the API sends them; None before the first one.
+    reading: dict[str, Any] | None
 
     @classmethod
     def from_api(cls, data: dict[str, Any]) -> Device:
@@ -155,10 +143,8 @@ class Device:
             comfort_level=min(max(int(data.get("comfort_level") or 0), MIN_LEVEL), MAX_LEVEL),
             is_online=bool(data.get("is_online")),
             wifi_signal=int(wifi) if wifi is not None else None,
-            has_filter=bool(data.get("has_filter")),
             is_drying_heat_exchanger=bool(data.get("is_drying_heat_exchanger")),
-            reading=Reading(history) if isinstance(history, dict) else None,
-            raw=data,
+            reading=history if isinstance(history, dict) else None,
         )
 
 
@@ -171,7 +157,6 @@ class DeviceGroup:
     mode: str | None
     current_running_rule: str | None
     is_rule_enabled: bool
-    target_temperature: float | None
     status: str | None
     devices: dict[int, Device]
     raw: dict[str, Any] = field(repr=False)
@@ -180,14 +165,12 @@ class DeviceGroup:
     def from_api(cls, data: dict[str, Any]) -> DeviceGroup:
         """Parse a device group object."""
         devices = [Device.from_api(d) for d in data.get("devices") or []]
-        target = data.get("target_temperature")
         return cls(
             id=int(data["id"]),
             name=str(data.get("name") or f"Group {data['id']}"),
             mode=data.get("mode"),
             current_running_rule=data.get("current_running_rule"),
             is_rule_enabled=bool(data.get("is_rule_enabled")),
-            target_temperature=float(target) if target is not None else None,
             status=data.get("status"),
             devices={d.id: d for d in devices},
             raw=data,
